@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties } from 'react';
+import { StrictMode, CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -13,19 +13,49 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
+	const [styl, setStyl] = useState({
+		fontFamilyOption: defaultArticleState.fontFamilyOption.value,
+		fontSizeOption: defaultArticleState.fontSizeOption.value,
+		fontColor: defaultArticleState.fontColor.value,
+		contentWidth: defaultArticleState.contentWidth.value,
+		bgColor: defaultArticleState.backgroundColor.value,
+	});
+
+	function resBut() {
+		setStyl({
+			...styl,
+			fontFamilyOption: defaultArticleState.fontFamilyOption.value,
+			fontSizeOption: defaultArticleState.fontSizeOption.value,
+			fontColor: defaultArticleState.fontColor.value,
+			contentWidth: defaultArticleState.contentWidth.value,
+			bgColor: defaultArticleState.backgroundColor.value,
+		});
+	}
+
+	const confBut = (e: any) => {
+		setStyl({
+			...styl,
+			fontFamilyOption: e.fontFamilyOption.value,
+			fontSizeOption: e.fontSizeOption.value,
+			fontColor: e.fontColor.value,
+			contentWidth: e.contentWidth.value,
+			bgColor: e.bgColor.value,
+		});
+	};
+
 	return (
 		<div
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': defaultArticleState.fontFamilyOption.value,
-					'--font-size': defaultArticleState.fontSizeOption.value,
-					'--font-color': defaultArticleState.fontColor.value,
-					'--container-width': defaultArticleState.contentWidth.value,
-					'--bg-color': defaultArticleState.backgroundColor.value,
+					'--font-family': styl.fontFamilyOption,
+					'--font-size': styl.fontSizeOption,
+					'--font-color': styl.fontColor,
+					'--container-width': styl.contentWidth,
+					'--bg-color': styl.bgColor,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm />
+			<ArticleParamsForm confirm={confBut} reset={resBut} />
 			<Article />
 		</div>
 	);
