@@ -1,6 +1,6 @@
 import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import styles from './ArticleParamsForm.module.scss';
 import { RadioGroup } from '../radio-group/RadioGroup';
 import { Select } from '../select/Select';
@@ -11,69 +11,92 @@ import {
 	contentWidthArr,
 	backgroundColors,
 	fontColors,
+	defaultArticleState,
+	ArticleStateType,
 } from '/dev/blog-customizer/src/constants/articleProps';
 
 export type ArticleParamsFormType = {
-	confirm: ({}) => void;
-	reset: () => void;
+	setCurrentArticleState: (param: ArticleStateType) => void;
 };
 
 export const ArticleParamsForm = ({
-	confirm,
-	reset,
+	setCurrentArticleState,
 }: ArticleParamsFormType) => {
 	const ref = useRef<HTMLDivElement>(null);
-	const [state, toggleState] = useState('false');
+	const [isOpenArticleParams, setIsOpenArticleParams] = useState(false);
 	const [selectedFontFamily, setSelectedFontFamily] = useState(
-		fontFamilyOptions[0]
+		defaultArticleState.fontFamilyOption
 	);
-	const [selectedFontSize, setSelectedFontSize] = useState(fontSizeOptions[0]);
-	const [selectedFontColors, setSelectedFontColors] = useState(fontColors[0]);
+	const [selectedFontSize, setSelectedFontSize] = useState(
+		defaultArticleState.fontSizeOption
+	);
+	const [selectedFontColors, setSelectedFontColors] = useState(
+		defaultArticleState.fontColor
+	);
 	const [selectedBackgroundColors, setSelectedBackgroundColors] = useState(
-		backgroundColors[0]
+		defaultArticleState.backgroundColor
 	);
 	const [selectedContentWidthArr, setSelectedContentWidthArr] = useState(
-		contentWidthArr[0]
+		defaultArticleState.contentWidth
 	);
 	const toggleForm =
-		state === 'true' ? styles.container_open : styles.container;
+		isOpenArticleParams === true ? styles.container_open : styles.container;
 
 	function handleArrowClick() {
-		toggleState(state === 'true' ? 'false' : 'true');
-		document.addEventListener('mousedown', handleClickOutside);
+		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
 	}
 
-	function handleClickOutside(event: any) {
-		if (ref.current && !ref.current.contains(event.target)) {
-			document.removeEventListener('mousedown', handleClickOutside);
-			toggleState('false');
+	useEffect(() => {
+		if (toggleForm === true) return;
+
+		function handleClickOutside(event: MouseEvent) {
+			const { target } = event;
+			const isOutsideClick =
+				target instanceof Node && ref.current && !ref.current.contains(target);
+			if (isOutsideClick) {
+				setIsOpenArticleParams(false);
+			}
 		}
-	}
+
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				setIsOpenArticleParams(false);
+			}
+		};
+
+		document.addEventListener('keydown', handleEscape);
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('keydown', handleEscape);
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [ref]);
 
 	const resetButton = () => {
-		reset();
-		setSelectedFontFamily(fontFamilyOptions[0]);
-		setSelectedFontSize(fontSizeOptions[0]);
-		setSelectedFontColors(fontColors[0]);
-		setSelectedBackgroundColors(backgroundColors[0]);
-		setSelectedContentWidthArr(contentWidthArr[0]);
-		toggleState(state === 'true' ? 'false' : 'true');
+		setCurrentArticleState({
+			fontFamilyOption: defaultArticleState.fontFamilyOption,
+			fontSizeOption: defaultArticleState.fontSizeOption,
+			fontColor: defaultArticleState.fontColor,
+			contentWidth: defaultArticleState.contentWidth,
+			backgroundColor: defaultArticleState.backgroundColor,
+		});
+		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
 	};
 
 	const confirmButton = () => {
-		confirm({
+		setCurrentArticleState({
 			fontFamilyOption: selectedFontFamily,
 			fontSizeOption: selectedFontSize,
 			fontColor: selectedFontColors,
 			contentWidth: selectedContentWidthArr,
-			bgColor: selectedBackgroundColors,
+			backgroundColor: selectedBackgroundColors,
 		});
-		toggleState(state === 'true' ? 'false' : 'true');
+		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
 	};
 
 	return (
 		<>
-			<ArrowButton state={state} onClick={handleArrowClick} />
+			<ArrowButton state={isOpenArticleParams} onClick={handleArrowClick} />
 			<aside ref={ref} className={toggleForm}>
 				<form className={styles.form}>
 					<h1 className={styles.title}>Задайте параметры</h1>

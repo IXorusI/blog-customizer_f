@@ -2,14 +2,13 @@ import arrow from 'src/images/arrow.svg';
 import styles from './ArrowButton.module.scss';
 
 export type OnClick = {
-	state: string;
+	state: boolean;
 	onClick: () => void;
 };
 
 export const ArrowButton = ({ state, onClick }: OnClick) => {
-	const toggleForm =
-		state === 'true' ? styles.container_open : styles.container;
-	const toggleArrow = state === 'true' ? styles.arrow_open : styles.arrow;
+	const toggleForm = state === true ? styles.container_open : styles.container;
+	const toggleArrow = state === true ? styles.arrow_open : styles.arrow;
 
 	return (
 		<div

@@ -13,49 +13,38 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
-	const [styl, setStyl] = useState({
+	const [currentArticleState, setCurrentArticleState] = useState({
 		fontFamilyOption: defaultArticleState.fontFamilyOption.value,
 		fontSizeOption: defaultArticleState.fontSizeOption.value,
 		fontColor: defaultArticleState.fontColor.value,
 		contentWidth: defaultArticleState.contentWidth.value,
-		bgColor: defaultArticleState.backgroundColor.value,
+		backgroundColor: defaultArticleState.backgroundColor.value,
 	});
 
-	function resBut() {
-		setStyl({
-			...styl,
-			fontFamilyOption: defaultArticleState.fontFamilyOption.value,
-			fontSizeOption: defaultArticleState.fontSizeOption.value,
-			fontColor: defaultArticleState.fontColor.value,
-			contentWidth: defaultArticleState.contentWidth.value,
-			bgColor: defaultArticleState.backgroundColor.value,
-		});
-	}
-
-	const confBut = (e: any) => {
-		setStyl({
-			...styl,
+	function onCurrentArticleState(e: any) {
+		setCurrentArticleState({
+			...currentArticleState,
 			fontFamilyOption: e.fontFamilyOption.value,
 			fontSizeOption: e.fontSizeOption.value,
 			fontColor: e.fontColor.value,
 			contentWidth: e.contentWidth.value,
-			bgColor: e.bgColor.value,
+			backgroundColor: e.backgroundColor.value,
 		});
-	};
+	}
 
 	return (
 		<div
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': styl.fontFamilyOption,
-					'--font-size': styl.fontSizeOption,
-					'--font-color': styl.fontColor,
-					'--container-width': styl.contentWidth,
-					'--bg-color': styl.bgColor,
+					'--font-family': currentArticleState.fontFamilyOption,
+					'--font-size': currentArticleState.fontSizeOption,
+					'--font-color': currentArticleState.fontColor,
+					'--container-width': currentArticleState.contentWidth,
+					'--bg-color': currentArticleState.backgroundColor,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm confirm={confBut} reset={resBut} />
+			<ArticleParamsForm setCurrentArticleState={onCurrentArticleState} />
 			<Article />
 		</div>
 	);
