@@ -13,7 +13,7 @@ import {
 	fontColors,
 	defaultArticleState,
 	ArticleStateType,
-} from '/dev/blog-customizer/src/constants/articleProps';
+} from '../../constants/articleProps';
 
 export type ArticleParamsFormType = {
 	setCurrentArticleState: (param: ArticleStateType) => void;
@@ -39,11 +39,12 @@ export const ArticleParamsForm = ({
 	const [selectedContentWidthArr, setSelectedContentWidthArr] = useState(
 		defaultArticleState.contentWidth
 	);
-	const toggleForm =
-		isOpenArticleParams === true ? styles.container_open : styles.container;
+	const toggleForm = isOpenArticleParams
+		? styles.container_open
+		: styles.container;
 
 	function handleArrowClick() {
-		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
+		setIsOpenArticleParams(!isOpenArticleParams);
 	}
 
 	useEffect(() => {
@@ -70,7 +71,7 @@ export const ArticleParamsForm = ({
 			document.removeEventListener('keydown', handleEscape);
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [ref]);
+	}, [toggleForm]);
 
 	const resetButton = () => {
 		setCurrentArticleState({
@@ -80,7 +81,12 @@ export const ArticleParamsForm = ({
 			contentWidth: defaultArticleState.contentWidth,
 			backgroundColor: defaultArticleState.backgroundColor,
 		});
-		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
+		setSelectedFontFamily(defaultArticleState.fontFamilyOption);
+		setSelectedFontSize(defaultArticleState.fontSizeOption);
+		setSelectedFontColors(defaultArticleState.fontColor);
+		setSelectedBackgroundColors(defaultArticleState.backgroundColor);
+		setSelectedContentWidthArr(defaultArticleState.contentWidth);
+		setIsOpenArticleParams(!isOpenArticleParams);
 	};
 
 	const confirmButton = () => {
@@ -91,7 +97,7 @@ export const ArticleParamsForm = ({
 			contentWidth: selectedContentWidthArr,
 			backgroundColor: selectedBackgroundColors,
 		});
-		setIsOpenArticleParams(isOpenArticleParams === true ? false : true);
+		setIsOpenArticleParams(!isOpenArticleParams);
 	};
 
 	return (

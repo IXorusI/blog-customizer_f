@@ -4,7 +4,10 @@ import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
 import { ArticleParamsForm } from './components/article-params-form/ArticleParamsForm';
-import { defaultArticleState } from './constants/articleProps';
+import {
+	ArticleStateType,
+	defaultArticleState,
+} from './constants/articleProps';
 
 import './styles/index.scss';
 import styles from './styles/index.module.scss';
@@ -21,14 +24,14 @@ const App = () => {
 		backgroundColor: defaultArticleState.backgroundColor.value,
 	});
 
-	function onCurrentArticleState(e: any) {
+	function onCurrentArticleState(styles: ArticleStateType) {
 		setCurrentArticleState({
 			...currentArticleState,
-			fontFamilyOption: e.fontFamilyOption.value,
-			fontSizeOption: e.fontSizeOption.value,
-			fontColor: e.fontColor.value,
-			contentWidth: e.contentWidth.value,
-			backgroundColor: e.backgroundColor.value,
+			fontFamilyOption: styles.fontFamilyOption.value,
+			fontSizeOption: styles.fontSizeOption.value,
+			fontColor: styles.fontColor.value,
+			contentWidth: styles.contentWidth.value,
+			backgroundColor: styles.backgroundColor.value,
 		});
 	}
 
